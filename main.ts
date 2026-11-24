@@ -24,6 +24,11 @@ if (text.trim().length === 0) {
 if (/[\r\n]/.test(text)) {
   throw new Error("entry must be a single line (no line breaks)");
 }
+// Other control characters would pass the length gate but break a
+// one-line display or a strict judge; the entry must be printable.
+if (/[\u0000-\u001f\u007f]/.test(text)) {
+  throw new Error("entry contains control characters");
+}
 
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 mkdirSync(outDir, { recursive: true });
